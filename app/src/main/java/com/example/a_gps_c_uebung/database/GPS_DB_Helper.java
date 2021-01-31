@@ -10,7 +10,7 @@ public class GPS_DB_Helper extends SQLiteOpenHelper {
     private final static int DB_VERSION = 1;
 
     public GPS_DB_Helper(Context context) {
-        super(context, DB_NAME , null, DB_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override

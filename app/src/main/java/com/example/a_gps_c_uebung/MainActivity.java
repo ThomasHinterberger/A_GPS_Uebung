@@ -1,9 +1,5 @@
 package com.example.a_gps_c_uebung;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -16,21 +12,22 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.example.a_gps_c_uebung.database.GPSTbl;
 import com.example.a_gps_c_uebung.database.GPS_DB_Helper;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int RQ_ACCESS_FINE_LOCATION = 777;
     LocationManager locationManager;
     LocationListener locationListener;
     SQLiteDatabase db;
-
-    private static final int RQ_ACCESS_FINE_LOCATION = 777;
-    private boolean isGpsAllowed = false;
-
     Location oldlocation;
+    private boolean isGpsAllowed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +60,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(isGpsAllowed) locationManager.removeUpdates(locationListener);
+        if (isGpsAllowed) locationManager.removeUpdates(locationListener);
     }
 
     private void checkPermissionGPS() {
         String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        if(ActivityCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, permission)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{ permission },
+                    new String[]{permission},
                     RQ_ACCESS_FINE_LOCATION);
             isGpsAllowed = false;
-        }else {
+        } else {
             isGpsAllowed = true;
             gpsIsGranted();
         }
@@ -83,18 +80,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode != RQ_ACCESS_FINE_LOCATION) return;
-        if(grantResults.length > 0 &&
-            grantResults[0] != PackageManager.PERMISSION_GRANTED){
+        if (requestCode != RQ_ACCESS_FINE_LOCATION) return;
+        if (grantResults.length > 0 &&
+                grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             Toast t = Toast.makeText(getApplicationContext(), "Permission ACCES_FINE_LOACTION denied!", Toast.LENGTH_SHORT);
             t.show();
-        }else{
+        } else {
             gpsIsGranted();
         }
     }
 
     private void gpsIsGranted() {
-        Toast t = Toast.makeText(getApplicationContext(), "gpsGranted",Toast.LENGTH_LONG);
+        Toast t = Toast.makeText(getApplicationContext(), "gpsGranted", Toast.LENGTH_LONG);
         t.show();
         isGpsAllowed = true;
 
@@ -107,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayLocation(Location location) {
-        if(oldlocation == null || location.distanceTo(oldlocation) >= 5){
+        if (oldlocation == null || location.distanceTo(oldlocation) >= 5) {
             oldlocation = location;
             //database
             Cursor rows = db.rawQuery(GPSTbl.GPSSTMT_COUNT, null);
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
             tvx.setText("" + location.getLatitude());
             tvy.setText("" + location.getLongitude());
-            LocalDateTime ldt =LocalDateTime.now();
+            LocalDateTime ldt = LocalDateTime.now();
             tvdatetime.setText("" + ldt.toString());
 
         }
@@ -130,6 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void registerSystemService() {
-        locationManager = (LocationManager) getSystemService(LocationManager.class);
+        locationManager = getSystemService(LocationManager.class);
     }
 }
