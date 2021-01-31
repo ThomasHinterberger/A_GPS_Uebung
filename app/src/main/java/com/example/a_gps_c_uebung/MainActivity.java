@@ -2,6 +2,7 @@ package com.example.a_gps_c_uebung;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
         oldlocation = null;
         registerSystemService();
         checkPermissionGPS();
+        setonClickListener();
     }
+
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -128,5 +134,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void registerSystemService() {
         locationManager = getSystemService(LocationManager.class);
+    }
+
+    private void setonClickListener() {
+        Button button = findViewById(R.id.buttonAnzeigen);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Gps_show_data.class);
+                startActivity(intent);
+            }
+        });
     }
 }
