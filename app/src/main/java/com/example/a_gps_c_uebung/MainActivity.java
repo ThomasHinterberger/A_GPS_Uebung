@@ -7,6 +7,8 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,12 +16,16 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a_gps_c_uebung.database.GPSTbl;
+import com.example.a_gps_c_uebung.database.GPS_DB_Helper;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
+    SQLiteDatabase db;
 
     private static final int RQ_ACCESS_FINE_LOCATION = 777;
     private boolean isGpsAllowed = false;
@@ -30,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //database
+        GPS_DB_Helper db_helper = new GPS_DB_Helper(this);
+        db = db_helper.getReadableDatabase();
 
         oldlocation = null;
         registerSystemService();
@@ -66,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             isGpsAllowed = false;
         }else {
             isGpsAllowed = true;
-
+            gpsIsGranted();
         }
     }
 
@@ -99,6 +109,12 @@ public class MainActivity extends AppCompatActivity {
     private void displayLocation(Location location) {
         if(oldlocation == null || location.distanceTo(oldlocation) >= 5){
             oldlocation = location;
+            //database
+            Cursor rows = db.rawQuery(GPSTbl.GPSSTMT_COUNT, null);
+            rows.moveToNext();
+            int id = rows.getInt(0);
+            db.execSQL(GPSTbl.GPSSTMT_INSERT, new Object[]{id, "" + location.getLongitude(),
+                    "" + location.getLatitude(), LocalDateTime.now().toString()});
 
             TextView tvx = findViewById(R.id.textX);
             TextView tvy = findViewById(R.id.textY);
