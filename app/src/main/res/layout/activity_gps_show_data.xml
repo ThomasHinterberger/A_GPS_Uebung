@@ -9,9 +9,8 @@
     <ListView
         android:id="@+id/listViewGpsData"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="10.0sp"
-        app:flow_wrapMode="none"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="textMultiLine"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
