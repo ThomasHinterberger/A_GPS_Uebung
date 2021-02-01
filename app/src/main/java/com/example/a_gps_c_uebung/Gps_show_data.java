@@ -3,11 +3,11 @@ package com.example.a_gps_c_uebung;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.a_gps_c_uebung.adapter.Gps_adapter;
 import com.example.a_gps_c_uebung.database.GPSTbl;
 import com.example.a_gps_c_uebung.database.GPS_DB_Helper;
 
@@ -33,11 +33,12 @@ public class Gps_show_data extends AppCompatActivity {
             String longitude = rows.getString(1);
             String latitude = rows.getString(2);
             String dateTime = rows.getString(3);
-            arrayList.add("longitude= " + longitude + " latitude=" + latitude + " myDate =" + dateTime);
+            String rowStr = "longitude = " + longitude + " \nlatitude =" + latitude + " \nmyDate =" + dateTime;
+            arrayList.add(rowStr);
         }
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, arrayList);
+        Gps_adapter gps_adapter = new Gps_adapter(getApplicationContext(), R.layout.list_view_gps_layout, arrayList);
         ListView listView = findViewById(R.id.listViewGpsData);
-        listView.setAdapter(arrayAdapter);
+        listView.setAdapter(gps_adapter);
     }
 }
